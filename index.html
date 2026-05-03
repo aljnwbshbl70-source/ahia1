@@ -1,0 +1,221 @@
+l
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مجسم ستيم - ثاني ثانوي</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Tajawal:wght@400;700&display=swap');
+        
+        body {
+            background: radial-gradient(circle at top, #0f172a 0%, #020617 100%);
+            color: white;
+            font-family: 'Tajawal', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* حاوية مرنة تضمن ظهور كل شيء */
+        .model-viewport {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 20px;
+            min-height: 450px;
+        }
+
+        .central-hub {
+            position: relative;
+            width: clamp(280px, 80vw, 500px);
+            height: clamp(280px, 80vw, 500px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* النواة المركزية - الأحياء */
+        .core {
+            width: clamp(80px, 20vw, 120px);
+            height: clamp(80px, 20vw, 120px);
+            background: rgba(16, 185, 129, 0.15);
+            border: 3px solid #10b981;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.4);
+            z-index: 50;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .core:hover { transform: scale(1.1); }
+
+        /* الأقمار - المواد */
+        .satellite {
+            position: absolute;
+            width: clamp(70px, 15vw, 90px);
+            height: clamp(70px, 15vw, 90px);
+            background: rgba(15, 23, 42, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 18px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 40;
+            backdrop-filter: blur(8px);
+        }
+
+        .satellite:hover {
+            transform: translateY(-5px);
+            background: rgba(30, 41, 59, 1);
+        }
+
+        /* توزيع المواد بشكل دائري متجاوب */
+        .sat-1 { top: 0%; left: 50%; transform: translate(-50%, -10%); border-color: #3b82f6; } /* فيزياء */
+        .sat-2 { top: 25%; right: 0%; transform: translate(10%, 0%); border-color: #8b5cf6; } /* رياضيات */
+        .sat-3 { bottom: 10%; right: 10%; border-color: #facc15; } /* كيمياء */
+        .sat-4 { top: 25%; left: 0%; transform: translate(-10%, 0%); border-color: #f97316; } /* تاريخ */
+        .sat-5 { bottom: 10%; left: 10%; border-color: #06b6d4; } /* علوم بيئة */
+
+        /* لوحة المعلومات */
+        #info-panel {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(15, 23, 42, 0.95);
+            border-top: 2px solid #10b981;
+            border-radius: 25px 25px 0 0;
+            padding: 25px;
+            max-height: 40vh;
+            overflow-y: auto;
+            display: none;
+            z-index: 100;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.8);
+        }
+
+        .icon { font-size: 1.5rem; margin-bottom: 4px; }
+        .label { font-size: clamp(0.7rem, 2vw, 0.85rem); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="text-center py-6 px-4">
+        <h1 style="font-family: 'Orbitron'" class="text-2xl md:text-3xl font-bold tracking-widest text-emerald-400">STEAM HUB 360</h1>
+        <p class="text-slate-400 text-xs md:text-sm mt-1 uppercase">نظام التكامل المعرفي لثاني ثانوي</p>
+    </header>
+
+    <!-- Interactive Model Area -->
+    <main class="model-viewport">
+        <div class="central-hub">
+            <!-- النواة -->
+            <div class="core" onclick="showData('bio')">
+                <span class="icon">🧬</span>
+                <span class="label text-emerald-400">الأحياء</span>
+            </div>
+
+            <!-- المواد -->
+            <div class="satellite sat-1" onclick="showData('physics')">
+                <span class="icon">⚛️</span>
+                <span class="label">الفيزياء</span>
+            </div>
+            <div class="satellite sat-2" onclick="showData('math')">
+                <span class="icon">📐</span>
+                <span class="label">الرياضيات</span>
+            </div>
+            <div class="satellite sat-3" onclick="showData('chemistry')">
+                <span class="icon">🧪</span>
+                <span class="label">الكيمياء</span>
+            </div>
+            <div class="satellite sat-4" onclick="showData('history')">
+                <span class="icon">🏛️</span>
+                <span class="label">التاريخ</span>
+            </div>
+            <div class="satellite sat-5" onclick="showData('env')">
+                <span class="icon">🌱</span>
+                <span class="label">البيئة</span>
+            </div>
+
+            <!-- خطوط الربط الخلفية (SVG) -->
+            <svg class="absolute inset-0 w-full h-full opacity-20" style="z-index: 0;">
+                <circle cx="50%" cy="50%" r="35%" stroke="#10b981" stroke-width="1" fill="none" stroke-dasharray="8 4" />
+            </svg>
+        </div>
+    </main>
+
+    <!-- Bottom Info Panel -->
+    <div id="info-panel">
+        <div class="flex justify-between items-center mb-4">
+            <h2 id="p-title" class="text-xl font-bold text-emerald-400"></h2>
+            <button onclick="document.getElementById('info-panel').style.display='none'" class="bg-white/10 p-2 rounded-full text-slate-300">✕</button>
+        </div>
+        <div class="space-y-4">
+            <p id="p-desc" class="text-slate-300 text-sm leading-relaxed"></p>
+            <div class="bg-emerald-500/10 p-4 rounded-xl border border-emerald-500/20">
+                <span class="text-emerald-400 text-[10px] font-bold uppercase block mb-1 underline">الربط بـ STEAM (ثاني ثانوي):</span>
+                <p id="p-link" class="text-emerald-50 text-xs italic"></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const store = {
+            bio: {
+                t: "علم الأحياء (النواة)",
+                d: "هو حجر الأساس لجميع العلوم الحيوية، يركز على دراسة الكائنات والعمليات الحيوية.",
+                l: "في هذا النموذج، الأحياء هي المصدر الذي يمد الفيزياء والكيمياء والرياضيات بمجالات التطبيق والبحث."
+            },
+            physics: {
+                t: "الفيزياء",
+                d: "تدرس القوى، الحركة، والنبضات الكهربائية التي تشغل الأنظمة الميكانيكية.",
+                l: "ترتبط بالأحياء في دراسة الميكانيكا الحيوية (مثل حركة العضلات) والكهرباء الحيوية في الجهاز العصبي."
+            },
+            math: {
+                t: "الرياضيات",
+                d: "لغة الأنماط والقياسات الدقيقة التي تحلل البيانات العلمية.",
+                l: "تستخدم في ثاني ثانوي لحساب الاحتمالات الوراثية وتطور المجتمعات الحيوية إحصائياً."
+            },
+            chemistry: {
+                t: "الكيمياء",
+                d: "تدرس التفاعلات الجزيئية والروابط التي تبني المادة.",
+                l: "الكيمياء الحيوية هي محرك الحياة؛ تشرح البناء الضوئي، التنفس الخلوي، وبنية الـ DNA والبروتينات."
+            },
+            history: {
+                t: "التاريخ",
+                d: "توثيق تطور المعرفة الإنسانية والاكتشافات عبر العصور.",
+                l: "تاريخ العلم يوضح كيف تطور المجهر والتقنيات الطبية لتغير فهمنا للبيولوجيا وتنقذ البشرية من الأوبئة."
+            },
+            env: {
+                t: "علوم البيئة",
+                d: "دراسة العلاقات المتبادلة بين الكائنات وبيئتها.",
+                l: "تطبيق عملي لدروس الأحياء في الحفاظ على الغلاف الحيوي، الاستدامة، وحماية التنوع الحيوي."
+            }
+        };
+
+        function showData(id) {
+            const panel = document.getElementById('info-panel');
+            const data = store[id];
+            
+            document.getElementById('p-title').innerText = data.t;
+            document.getElementById('p-desc').innerText = data.d;
+            document.getElementById('p-link').innerText = data.l;
+            
+            panel.style.display = 'block';
+            panel.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
+
+
